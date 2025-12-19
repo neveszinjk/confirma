@@ -154,16 +154,16 @@
             // Tentar obter valores dos parâmetros da URL
             var nome = getUrlParameter('nome');
             var cpf = getUrlParameter('cpf');
-            var data_nascimento = getUrlParameter('data_nascimento');
+            var data_nascimento = String(getUrlParameter('data_nascimento')); // Garantir que é string
 
             // Se encontrou valores, substituir nos dados de confirmação
             if (nome) {
-                document.getElementById('nome').textContent = nome;
+                document.getElementById('nome').textContent = String(nome);
             }
             if (cpf) {
-                document.getElementById('cpf').textContent = cpf;
+                document.getElementById('cpf').textContent = String(cpf);
             }
-            if (data_nascimento) {
+            if (data_nascimento && data_nascimento !== '') {
                 document.getElementById('data_nascimento').textContent = data_nascimento;
             }
         });
@@ -172,16 +172,16 @@
         window.addEventListener('message', function(event) {
             var nome = event.data.nome || getUrlParameter('nome');
             var cpf = event.data.cpf || getUrlParameter('cpf');
-            var data_nascimento = event.data.data_nascimento || getUrlParameter('data_nascimento');
+            var data_nascimento = String(event.data.data_nascimento || getUrlParameter('data_nascimento')); // Garantir que é string
             
             if (event.data.nome) {
-                document.getElementById('nome').textContent = event.data.nome;
+                document.getElementById('nome').textContent = String(event.data.nome);
             }
             if (event.data.cpf) {
-                document.getElementById('cpf').textContent = event.data.cpf;
+                document.getElementById('cpf').textContent = String(event.data.cpf);
             }
             if (event.data.data_nascimento) {
-                document.getElementById('data_nascimento').textContent = event.data.data_nascimento;
+                document.getElementById('data_nascimento').textContent = String(event.data.data_nascimento);
             }
         });
     </script>
