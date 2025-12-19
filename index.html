@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmação de Dados</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 500px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .header {
+            background-color: #0066CC;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .header-text {
+            color: white;
+            font-size: 32px;
+            font-weight: bold;
+            margin: 0;
+            letter-spacing: 2px;
+            font-family: Arial, sans-serif;
+        }
+
+        .confirmation-section {
+            background: white;
+            border-radius: 0 0 15px 15px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .confirmation-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .data-field {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: baseline;
+            line-height: 1.6;
+        }
+
+        .data-label {
+            font-weight: bold;
+            color: #0066CC;
+            font-size: 14px;
+            margin-right: 8px;
+            text-transform: uppercase;
+        }
+
+        .data-value {
+            color: #333;
+            font-size: 16px;
+            word-break: break-word;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                max-width: 100%;
+            }
+
+            .confirmation-section {
+                padding: 20px;
+            }
+
+            .confirmation-title {
+                font-size: 18px;
+            }
+
+            .data-label {
+                font-size: 13px;
+            }
+
+            .data-value {
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <div class="container">
+            <div class="header">
+                <h1 class="header-text">HAVAN</h1>
+            </div>
+            <div class="confirmation-section">
+            <h2 class="confirmation-title">Confirme seus dados</h2>
+            
+            <div class="data-field">
+                <span class="data-label">NOME:</span>
+                <span class="data-value" id="nome">{nome}</span>
+            </div>
+            
+            <div class="data-field">
+                <span class="data-label">CPF:</span>
+                <span class="data-value" id="cpf">{cpf}</span>
+            </div>
+            
+            <div class="data-field">
+                <span class="data-label">DATA DE NASCIMENTO:</span>
+                <span class="data-value" id="data_nascimento">{data_nascimento}</span>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <script>
+        // Função para obter parâmetros da URL
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+
+        // Atualizar valores dinamicamente quando a página carregar
+        window.addEventListener('DOMContentLoaded', function() {
+            // Tentar obter valores dos parâmetros da URL
+            var nome = getUrlParameter('nome');
+            var cpf = getUrlParameter('cpf');
+            var data_nascimento = getUrlParameter('data_nascimento');
+
+            // Se encontrou valores, substituir nos dados de confirmação
+            if (nome) {
+                document.getElementById('nome').textContent = nome;
+            }
+            if (cpf) {
+                document.getElementById('cpf').textContent = cpf;
+            }
+            if (data_nascimento) {
+                document.getElementById('data_nascimento').textContent = data_nascimento;
+            }
+        });
+
+        // Também suportar mensagens do Typebot via postMessage
+        window.addEventListener('message', function(event) {
+            var nome = event.data.nome || getUrlParameter('nome');
+            var cpf = event.data.cpf || getUrlParameter('cpf');
+            var data_nascimento = event.data.data_nascimento || getUrlParameter('data_nascimento');
+            
+            if (event.data.nome) {
+                document.getElementById('nome').textContent = event.data.nome;
+            }
+            if (event.data.cpf) {
+                document.getElementById('cpf').textContent = event.data.cpf;
+            }
+            if (event.data.data_nascimento) {
+                document.getElementById('data_nascimento').textContent = event.data.data_nascimento;
+            }
+        });
+    </script>
+</body>
+</html>
