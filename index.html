@@ -72,8 +72,9 @@
         .data-field {
             margin-bottom: 15px;
             display: flex;
-            align-items: baseline;
+            align-items: center;
             line-height: 1.6;
+            flex-wrap: wrap;
         }
 
         .data-label {
@@ -82,12 +83,16 @@
             font-size: 14px;
             margin-right: 8px;
             text-transform: uppercase;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .data-value {
             color: #333;
             font-size: 16px;
             word-break: break-word;
+            flex: 1;
+            min-width: 0;
         }
 
         @media (max-width: 600px) {
@@ -149,6 +154,17 @@
             return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
         }
 
+        // Função para formatar data que vem como número
+        function formatarData(valor) {
+            if (!valor) return '';
+            var str = String(valor).trim();
+            if (str.includes('/')) return str;
+            if (/^\d{8}$/.test(str)) {
+                return str.substring(0, 2) + '/' + str.substring(2, 4) + '/' + str.substring(4);
+            }
+            return str;
+        }
+
         // Atualizar valores dinamicamente quando a página carregar
         window.addEventListener('DOMContentLoaded', function() {
             // Tentar obter valores dos parâmetros da URL
@@ -164,7 +180,7 @@
                 document.getElementById('cpf').textContent = String(cpf);
             }
             if (data_nascimento && data_nascimento !== '') {
-                document.getElementById('data_nascimento').textContent = data_nascimento;
+                document.getElementById('data_nascimento').textContent = formatarData(data_nascimento);
             }
         });
 
@@ -181,7 +197,7 @@
                 document.getElementById('cpf').textContent = String(event.data.cpf);
             }
             if (event.data.data_nascimento) {
-                document.getElementById('data_nascimento').textContent = String(event.data.data_nascimento);
+                document.getElementById('data_nascimento').textContent = formatarData(event.data.data_nascimento);
             }
         });
     </script>
