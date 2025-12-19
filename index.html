@@ -146,7 +146,7 @@
     </div>
 
     <script>
-        // Função para obter parâmetros da URL
+        // Funcao para obter parametros da URL
         function getUrlParameter(name) {
             name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
             var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
@@ -154,25 +154,43 @@
             return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
         }
 
-        // Função para formatar data que vem como número
+        // Funcao para formatar data que vem como numero
         function formatarData(valor) {
-            if (!valor) return '';
+            if (!valor && valor !== 0) return '';
             var str = String(valor).trim();
+            
+            // Se ja esta no formato DD/MM/YYYY, retorna
             if (str.includes('/')) return str;
+            
+            // Se eh um numero decimal pequeno (como 0.0001813647698934482)
+            // Provavelmente eh uma data do Excel/Typebot convertida incorretamente
+            if (/^0\./.test(str) && parseFloat(str) < 1) {
+                // Tenta recuperar a data original do parametro de URL
+                var urlData = getUrlParameter('data_nascimento');
+                if (urlData && urlData.includes('/')) {
+                    return urlData;
+                }
+                // Se nao conseguir, retorna vazio
+                return '';
+            }
+            
+            // Se tem 8 digitos (DDMMYYYY), formata para DD/MM/YYYY
             if (/^\d{8}$/.test(str)) {
                 return str.substring(0, 2) + '/' + str.substring(2, 4) + '/' + str.substring(4);
             }
+            
+            // Caso contrario, retorna como esta
             return str;
         }
 
-        // Atualizar valores dinamicamente quando a página carregar
+        // Atualizar valores dinamicamente quando a pagina carregar
         window.addEventListener('DOMContentLoaded', function() {
-            // Tentar obter valores dos parâmetros da URL
+            // Tentar obter valores dos parametros da URL
             var nome = getUrlParameter('nome');
             var cpf = getUrlParameter('cpf');
-            var data_nascimento = String(getUrlParameter('data_nascimento')); // Garantir que é string
+            var data_nascimento = String(getUrlParameter('data_nascimento')); // Garantir que eh string
 
-            // Se encontrou valores, substituir nos dados de confirmação
+            // Se encontrou valores, substituir nos dados de confirmacao
             if (nome) {
                 document.getElementById('nome').textContent = String(nome);
             }
@@ -184,11 +202,11 @@
             }
         });
 
-        // Também suportar mensagens do Typebot via postMessage
+        // Tambem suportar mensagens do Typebot via postMessage
         window.addEventListener('message', function(event) {
             var nome = event.data.nome || getUrlParameter('nome');
             var cpf = event.data.cpf || getUrlParameter('cpf');
-            var data_nascimento = String(event.data.data_nascimento || getUrlParameter('data_nascimento')); // Garantir que é string
+            var data_nascimento = String(event.data.data_nascimento || getUrlParameter('data_nascimento')); // Garantir que eh string
             
             if (event.data.nome) {
                 document.getElementById('nome').textContent = String(event.data.nome);
