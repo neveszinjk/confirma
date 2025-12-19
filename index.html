@@ -36,7 +36,7 @@
 
         .header {
             background-color: #0066CC;
-            padding: 20px;
+            padding: 12px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -45,7 +45,7 @@
 
         .header-text {
             color: white;
-            font-size: 32px;
+            font-size: 24px;
             font-weight: bold;
             margin: 0;
             letter-spacing: 2px;
@@ -55,7 +55,7 @@
         .confirmation-section {
             background: white;
             border-radius: 0 0 15px 15px;
-            padding: 30px;
+            padding: 24px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
@@ -70,18 +70,18 @@
         }
 
         .data-field {
-            margin-bottom: 15px;
+            margin-bottom: 16px;
             display: flex;
-            align-items: center;
-            line-height: 1.6;
-            flex-wrap: wrap;
+            flex-direction: column;
+            align-items: flex-start;
+            line-height: 1.4;
         }
 
         .data-label {
             font-weight: bold;
             color: #0066CC;
-            font-size: 14px;
-            margin-right: 8px;
+            font-size: 12px;
+            margin-bottom: 4px;
             text-transform: uppercase;
             white-space: nowrap;
             flex-shrink: 0;
@@ -89,10 +89,9 @@
 
         .data-value {
             color: #333;
-            font-size: 16px;
+            font-size: 14px;
             word-break: break-word;
-            flex: 1;
-            min-width: 0;
+            width: 100%;
         }
 
         @media (max-width: 600px) {
