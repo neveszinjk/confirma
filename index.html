@@ -154,41 +154,12 @@
             return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
         }
 
-        // Funcao para formatar data que vem como numero
-        function formatarData(valor) {
-            if (!valor && valor !== 0) return '';
-            var str = String(valor).trim();
-            
-            // Se ja esta no formato DD/MM/YYYY, retorna
-            if (str.includes('/')) return str;
-            
-            // Se eh um numero decimal pequeno (como 0.0001813647698934482)
-            // Provavelmente eh uma data do Excel/Typebot convertida incorretamente
-            if (/^0\./.test(str) && parseFloat(str) < 1) {
-                // Tenta recuperar a data original do parametro de URL
-                var urlData = getUrlParameter('data_nascimento');
-                if (urlData && urlData.includes('/')) {
-                    return urlData;
-                }
-                // Se nao conseguir, retorna vazio
-                return '';
-            }
-            
-            // Se tem 8 digitos (DDMMYYYY), formata para DD/MM/YYYY
-            if (/^\d{8}$/.test(str)) {
-                return str.substring(0, 2) + '/' + str.substring(2, 4) + '/' + str.substring(4);
-            }
-            
-            // Caso contrario, retorna como esta
-            return str;
-        }
-
         // Atualizar valores dinamicamente quando a pagina carregar
         window.addEventListener('DOMContentLoaded', function() {
             // Tentar obter valores dos parametros da URL
             var nome = getUrlParameter('nome');
             var cpf = getUrlParameter('cpf');
-            var data_nascimento = String(getUrlParameter('data_nascimento')); // Garantir que eh string
+            var data_nascimento = getUrlParameter('data_nascimento');
 
             // Se encontrou valores, substituir nos dados de confirmacao
             if (nome) {
@@ -197,17 +168,13 @@
             if (cpf) {
                 document.getElementById('cpf').textContent = String(cpf);
             }
-            if (data_nascimento && data_nascimento !== '') {
-                document.getElementById('data_nascimento').textContent = formatarData(data_nascimento);
+            if (data_nascimento) {
+                document.getElementById('data_nascimento').textContent = String(data_nascimento);
             }
         });
 
         // Tambem suportar mensagens do Typebot via postMessage
         window.addEventListener('message', function(event) {
-            var nome = event.data.nome || getUrlParameter('nome');
-            var cpf = event.data.cpf || getUrlParameter('cpf');
-            var data_nascimento = String(event.data.data_nascimento || getUrlParameter('data_nascimento')); // Garantir que eh string
-            
             if (event.data.nome) {
                 document.getElementById('nome').textContent = String(event.data.nome);
             }
@@ -215,7 +182,19 @@
                 document.getElementById('cpf').textContent = String(event.data.cpf);
             }
             if (event.data.data_nascimento) {
-                document.getElementById('data_nascimento').textContent = formatarData(event.data.data_nascimento);
+                // Recupera a data original do URL se o Typebot enviar um numero decimal
+                var dataValue = event.data.data_nascimento;
+                var dataStr = String(dataValue);
+                
+                // Se eh um numero decimal pequeno, tenta recuperar do URL
+                if (/^0\./.test(dataStr) && parseFloat(dataValue) < 1) {
+                    var urlData = getUrlParameter('data_nascimento');
+                    if (urlData) {
+                        document.getElementById('data_nascimento').textContent = urlData;
+                    }
+                } else {
+                    document.getElementById('data_nascimento').textContent = dataStr;
+                }
             }
         });
     </script>
