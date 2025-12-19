@@ -182,19 +182,18 @@
                 document.getElementById('cpf').textContent = String(event.data.cpf);
             }
             if (event.data.data_nascimento) {
-                // Recupera a data original do URL se o Typebot enviar um numero decimal
                 var dataValue = event.data.data_nascimento;
                 var dataStr = String(dataValue);
                 
-                // Se eh um numero decimal pequeno, tenta recuperar do URL
+                // Se eh um numero decimal pequeno, ignora e nao atualiza
+                // Mantém o valor original da URL
                 if (/^0\./.test(dataStr) && parseFloat(dataValue) < 1) {
-                    var urlData = getUrlParameter('data_nascimento');
-                    if (urlData) {
-                        document.getElementById('data_nascimento').textContent = urlData;
-                    }
-                } else {
-                    document.getElementById('data_nascimento').textContent = dataStr;
+                    // Nao faz nada, mantém o valor da URL
+                    return;
                 }
+                
+                // Caso contrario, atualiza normalmente
+                document.getElementById('data_nascimento').textContent = dataStr;
             }
         });
     </script>
